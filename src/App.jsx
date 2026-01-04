@@ -1,47 +1,72 @@
-import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  RecoilRoot,
+  useRecoilState,
+  useRecoilValue,
+  useSetRecoilState,
+} from "recoil";
 import { CounterAtom, evenSelector } from "./store/atoms/counter";
+import {
+  jobsAtom,
+  messageAtom,
+  networkAtom,
+  notificationAtom,
+  totolaNotificationSelector,
+} from "./store/atoms/topbar";
 
 function App() {
   return (
     <div>
       <RecoilRoot>
-        <Counter />
-        <Buttons />
-        <IsEven />
+        <MainCode />
       </RecoilRoot>
     </div>
   );
 }
 
-function Counter() {
-  const count = useRecoilValue(CounterAtom);
-  console.log("1")
-  return <div>{count}</div>;
+function MainCode() {
+  const networkAtomcount = useRecoilValue(networkAtom);
+  const jobsAtomcount = useRecoilValue(jobsAtom);
+  const messageAtomcount = useRecoilValue(messageAtom);
+  const [notificationAtomcount, setnotificationAtomCount] =
+    useRecoilState(notificationAtom);
+  const totolnotificationCount = useRecoilValue(totolaNotificationSelector);
+  return (
+    <div>
+      <button>my network({networkAtomcount >= 99 ? "99+" : networkAtomcount})</button>
+      <button>jobs{jobsAtomcount}</button>
+      <button>messaging{messageAtomcount}</button>
+      <button>notification {notificationAtomcount}</button>
+      <button
+        onClick={() => {
+          setnotificationAtomCount((c) => c + 1);
+        }}
+      >
+        me {totolnotificationCount}
+      </button>
+    </div>
+  );
 }
 
 function Buttons() {
   const setCount = useSetRecoilState(CounterAtom);
-  console.log("2")
-  return(
+  return (
     <div>
       <button
         onClick={() => {
           setCount((c) => c + 2);
         }}
-      >increse</button>
+      >
+        increse
+      </button>
       <button
         onClick={() => {
           setCount((c) => c - 1);
         }}
-      >decrese</button>
+      >
+        decrese
+      </button>
     </div>
   );
-}
-
-function IsEven() {
-  const isEven = useRecoilValue(evenSelector);
-  console.log("3")
-  return <>{isEven ? "true" : "false"}</>;
 }
 
 export default App;
