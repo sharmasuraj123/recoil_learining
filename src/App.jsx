@@ -1,17 +1,12 @@
+// this is the ugly code to asyncronouse queries.
+
 import {
   RecoilRoot,
   useRecoilState,
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
-import { CounterAtom, evenSelector } from "./store/atoms/counter";
-import {
-  jobsAtom,
-  messageAtom,
-  networkAtom,
-  notificationAtom,
-  totolaNotificationSelector,
-} from "./store/atoms/topbar";
+import { totolaNotificationSelector } from "./store/atoms/topbar";
 
 function App() {
   return (
@@ -24,46 +19,31 @@ function App() {
 }
 
 function MainCode() {
-  const networkAtomcount = useRecoilValue(networkAtom);
-  const jobsAtomcount = useRecoilValue(jobsAtom);
-  const messageAtomcount = useRecoilValue(messageAtom);
-  const [notificationAtomcount, setnotificationAtomCount] =
-    useRecoilState(notificationAtom);
-  const totolnotificationCount = useRecoilValue(totolaNotificationSelector);
+  const [notificationCount, setnotificationCount] =
+    useRecoilState(notifications);
+  const allnotificationCount = useRecoilValue(totolaNotificationSelector);
+
+  useEffect(() => {
+    axios.get("https://sum-server.100xdevs.com/notifications").then((res) => {
+      setNetworkCount(res.data);
+    });
+  }, []);
+
   return (
     <div>
-      <button>my network({networkAtomcount >= 99 ? "99+" : networkAtomcount})</button>
-      <button>jobs{jobsAtomcount}</button>
-      <button>messaging{messageAtomcount}</button>
-      <button>notification {notificationAtomcount}</button>
+      <button>
+        my network(
+        {notificationCount.networks >= 99 ? "99+" : notificationCount.networks})
+      </button>
+      <button>jobs{notificationCount.jobs}</button>
+      <button>messaging{notificationCount.notification}</button>
+      <button>notification {notificationCount.messages}</button>
       <button
         onClick={() => {
           setnotificationAtomCount((c) => c + 1);
         }}
       >
         me {totolnotificationCount}
-      </button>
-    </div>
-  );
-}
-
-function Buttons() {
-  const setCount = useSetRecoilState(CounterAtom);
-  return (
-    <div>
-      <button
-        onClick={() => {
-          setCount((c) => c + 2);
-        }}
-      >
-        increse
-      </button>
-      <button
-        onClick={() => {
-          setCount((c) => c - 1);
-        }}
-      >
-        decrese
       </button>
     </div>
   );
