@@ -6,7 +6,8 @@ import {
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
-import { totolaNotificationSelector } from "./store/atoms/topbar";
+import { notifications } from "./store/atoms/topbar";
+import { useEffect } from "react";
 
 function App() {
   return (
@@ -19,30 +20,38 @@ function App() {
 }
 
 function MainCode() {
-  const [notificationCount, setnotificationCount] =
-    useRecoilState(notifications);
-  const allnotificationCount = useRecoilValue(totolaNotificationSelector);
-
-  
-
   return (
     <div>
-      <button>
-        my network(
-        {notificationCount.networks >= 99 ? "99+" : notificationCount.networks})
-      </button>
-      <button>jobs{notificationCount.jobs}</button>
-      <button>messaging{notificationCount.notification}</button>
-      <button>notification {notificationCount.messages}</button>
-      <button
-        onClick={() => {
-          setnotificationAtomCount((c) => c + 1);
-        }}
-      >
-        me {totolnotificationCount}
-      </button>
+      <Todo id={1} />
+      <Todo id={2} />
+      <Todo id={2} />
+      <Todo id={2} />
+      <Todo id={2} />
+      <Todo id={2} />
     </div>
   );
+}
+
+function Todo({ id }) {
+  const [todos, setTodo] = useRecoilState(notifications(id));
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setTodo((x) => {
+        if (x.id === 2) {
+          return {
+            ...x,
+            description: "my name is suraj.",
+          };
+        }
+        return x;
+      });
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [setTodo]);
+  
+  return <div>{todos.description}</div>;
 }
 
 export default App;
