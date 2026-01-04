@@ -1,46 +1,47 @@
-// memo code
-
-/* this is the way of protecting the re-rendering in the children that not using the   */
-
-import { memo, useState, useEffect } from "react";
+import { RecoilRoot, useRecoilValue, useSetRecoilState } from "recoil";
+import { CounterAtom, evenSelector } from "./store/atoms/counter";
 
 function App() {
   return (
-    <>
-      <Counter />
-    </>
+    <div>
+      <RecoilRoot>
+        <Counter />
+        <Buttons />
+        <IsEven />
+      </RecoilRoot>
+    </div>
   );
 }
 
 function Counter() {
-  const [count, setcount] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setcount((c) => c + 1);
-    }, 3000);
-    return () => clearInterval(interval); // Good practice: cleanup your intervals!
-  }, []);
-  return (
-    <>
-      <CurrentCount count={count} />
-      <Increase />
-      <Decrease />
-    </>
+  const count = useRecoilValue(CounterAtom);
+  console.log("1")
+  return <div>{count}</div>;
+}
+
+function Buttons() {
+  const setCount = useSetRecoilState(CounterAtom);
+  console.log("2")
+  return(
+    <div>
+      <button
+        onClick={() => {
+          setCount((c) => c + 2);
+        }}
+      >increse</button>
+      <button
+        onClick={() => {
+          setCount((c) => c - 1);
+        }}
+      >decrese</button>
+    </div>
   );
 }
 
-const CurrentCount = memo(({ count }) => {
-  console.log("Current Count is rendering.")
-  return <div>{count}</div>;
-});
+function IsEven() {
+  const isEven = useRecoilValue(evenSelector);
+  console.log("3")
+  return <>{isEven ? "true" : "false"}</>;
+}
 
-const Increase = memo(() => {
-  console.log("increase rendered");
-  return <div><button>increase</button></div>;
-});
-
-const Decrease = memo(() => {
-  console.log("decrease rendered");
-  return <div><button>decrease</button></div>;
-});
 export default App;
