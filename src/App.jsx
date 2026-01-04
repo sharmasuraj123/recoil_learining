@@ -1,4 +1,4 @@
-// this is the ugly code to asyncronouse queries.
+// this is the best code to asyncronouse queries.
 
 import {
   RecoilRoot,
@@ -23,11 +23,7 @@ function MainCode() {
     useRecoilState(notifications);
   const allnotificationCount = useRecoilValue(totolaNotificationSelector);
 
-  useEffect(() => {
-    axios.get("https://sum-server.100xdevs.com/notifications").then((res) => {
-      setNetworkCount(res.data);
-    });
-  }, []);
+  
 
   return (
     <div>
