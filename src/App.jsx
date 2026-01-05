@@ -6,13 +6,18 @@ import {
   useSetRecoilState,
 } from "recoil";
 import { notifications } from "./store/atoms/topbar";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
+
 
 function App() {
   return (
     <div>
       <RecoilRoot>
-        <MainCode />
+       
+          <Suspense fallback={<div>Loading...</div>}>
+            <MainCode />
+          </Suspense>
+        
       </RecoilRoot>
     </div>
   );
@@ -29,15 +34,10 @@ function MainCode() {
 }
 
 function Todo({ id }) {
-  const [todos, setTodo] = useRecoilStateLoadable(notifications(id));
-  console.log(todos);
-  if(todos.state==="loading"){
-    return <div>Loading...</div>
-  }
-  else if(todos.state==="hasError"){
-    return <div>Error while fetching data</div>;
-  }
-  return <div>{todos.contents.title}</div>;
+  // const [todos, setTodo] = useRecoilState(notifications(id)); wrong
+  const todos= useRecoilValue(notifications(id))
+
+  return <div>{todos.title}</div>;
 }
 
 export default App;
