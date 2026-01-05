@@ -1,8 +1,7 @@
-//
-
 import {
   RecoilRoot,
   useRecoilState,
+  useRecoilStateLoadable,
   useRecoilValue,
   useSetRecoilState,
 } from "recoil";
@@ -24,14 +23,21 @@ function MainCode() {
     <div>
       <Todo id={1} />
       <Todo id={2} />
+      <Todo id={2} />
     </div>
   );
 }
 
 function Todo({ id }) {
-  const [todos, setTodo] = useRecoilState(notifications(id));
-
-  return <div>{todos.description}</div>;
+  const [todos, setTodo] = useRecoilStateLoadable(notifications(id));
+  console.log(todos);
+  if(todos.state==="loading"){
+    return <div>Loading...</div>
+  }
+  else if(todos.state==="hasError"){
+    return <div>Error while fetching data</div>;
+  }
+  return <div>{todos.contents.title}</div>;
 }
 
 export default App;
